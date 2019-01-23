@@ -11,14 +11,14 @@
 //   });
 // };
 
-const reuest = new HttpRequest({
-  baseUrl: 'http://localhost:8000',
-});
+// const reuest = new HttpRequest({
+//   baseUrl: 'http://localhost:8000',
+// });
 
-reuest.get('/ping')
-  .then(response => {
-    console.log(response);
-  })
-  .catch(e => {
-    console.log(e)
-  });
+// reuest.get('/ping')
+//   .then(response => {
+//     console.log(response);
+//   })
+//   .catch(e => {
+//     console.log(e)
+//   });

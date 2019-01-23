@@ -1,20 +1,19 @@
-/* eslint-disable class-methods-use-this */
-class HttpRequest {
-  // get request options({ baseUrl, headers })
-  constructor({ baseUrl, headers }) {
-    this.baseUrl = baseUrl;
-    this.headers = headers;
-  }
+// class HttpRequest {
+//   // get request options({ baseUrl, headers })
+//   constructor({ baseUrl, headers }) {
+//     this.baseUrl = baseUrl;
+//     this.headers = headers;
+//   }
 
-  get(url, config) {
-    return fetch(url).then(d =>d.text())
-    // write code this
-  }
+//   get(url, config) {
+//     return fetch(url).then(d =>d.text())
+//     // write code this
+//   }
 
-  post(url, config) {
-  // write code this
-  }
-}
+//   post(url, config) {
+//   // write code this
+//   }
+// }
 
 /*
 const reuest = new HttpRequest({
