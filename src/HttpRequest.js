@@ -1,5 +1,5 @@
+/* eslint-disable class-methods-use-this */
 class HttpRequest {
-
   // get request options({ baseUrl, headers })
   constructor({ baseUrl, headers }) {
     this.baseUrl = baseUrl;
@@ -7,11 +7,12 @@ class HttpRequest {
   }
 
   get(url, config) {
-
+    return fetch(url).then(d =>d.text())
+    // write code this
   }
 
   post(url, config) {
-
+  // write code this
   }
 }
 
@@ -42,13 +43,13 @@ config = {
   // it is passed to then/catch
   transformResponse: [function (data) {
     // Do whatever you want to transform the data
- 
+
     return data;
   }],
- 
+
   // `headers` are custom headers to be sent
   headers: {'X-Requested-With': 'XMLHttpRequest'},
- 
+
   // `params` are the URL parameters to be sent with the request
   // Must be a plain object or a URLSearchParams object
   params: {
@@ -74,7 +75,7 @@ config = {
   onUploadProgress: function (progressEvent) {
     // Do whatever you want with the native progress event
   },
- 
+
   // `onDownloadProgress` allows handling of progress events for downloads
   onDownloadProgress: function (progressEvent) {
     // Do whatever you want with the native progress event
