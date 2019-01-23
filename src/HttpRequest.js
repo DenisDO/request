@@ -1,33 +1,57 @@
-// class HttpRequest {
-//   // get request options({ baseUrl, headers })
-//   constructor({ baseUrl, headers }) {
-//     this.baseUrl = baseUrl;
-//     this.headers = headers;
-//   }
+// responseType: const [arraybuffer, blob, document, json, text, stream]
+// responseType: 'json', // default
+// requestURL.toString(); // http://localhost:3000/user/12345?ID=12345&name=Den&surname=Derkach&age=21
 
-//   get(url, config) {
-//     return fetch(url).then(d =>d.text())
-//     // write code this
-//   }
+const [GET, POST] = ['GET', 'POST'];
 
-//   post(url, config) {
-//   // write code this
-//   }
-// }
+class HttpRequest {
+  constructor({ baseUrl, headers }) {
+    this.baseUrl = baseUrl;
+    this.headers = headers;
+  }
 
+  get(url, config) {
+    const [transformResponse, headers, params, responseType = 'json'] = config;
+    const requestURL = new URL(this.baseUrl + url);
+
+    for (const key in params) {
+      requestURL.searchParams.set(key, params[key]);
+    }
+    return new Promise(() => {
+      const xhr = new XMLHttpRequest();
+      xhr.open(GET, requestURL, false);
+      xhr.responseType = responseType;
+
+      for (const key in headers) {
+        xhr.setRequestHeader(key, headers[key]);
+      }
+
+      xhr.send();
+    });
+  }
+
+  // post(url, config) {
+  // // write code this
+  // }
+}
+
+// const reuest = new HttpRequest({
+//   baseUrl: 'http://localhost:3000',
+//   headers: {
+//     'Accept': 'text/plain',
+//     'Cache-Control': 'no-cache',
+//     'Transfer-Encoding': 'chunked'
+//   }
+// });
 
 /*
-const reuest = new HttpRequest({
-  baseUrl: 'http://localhost:3000',
-});
-
 reuest.get('/user/12345', { onDownloadProgress, headers: {contentType: undefined} })
-  .then(response => {
-    console.log(response);
-  })
-  .catch(e => {
-    console.log(e)
-  });
+.then(response => {
+  console.log(response);
+})
+.catch(e => {
+  console.log(e)
+});
 
 reuest.post('/save', { data: formdata, header, onUploadProgress })
   .then(response => {
