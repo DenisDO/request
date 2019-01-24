@@ -49,9 +49,29 @@ class HttpRequest {
     });
   }
 
-  // post(url, config) {
-  // // write code this
-  // }
+  post(url, config) {
+    const { transformResponse, headers, params, data, responseType = 'text' } = config;
+    const requestURL = generateURL(this.baseUrl, url, params);
+
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open(POST, requestURL);
+      xhr.responseType = responseType;
+
+      setHeaders(xhr, this.headers);
+      setHeaders(xhr, headers);
+
+      xhr.send(data);
+
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          resolve(transformResponse(xhr.responseText));
+        } else {
+          reject(xhr.status);
+        }
+      };
+    });
+  }
 }
 
 // const request = new HttpRequest({
