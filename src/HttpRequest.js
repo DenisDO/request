@@ -61,7 +61,11 @@ class HttpRequest {
       setHeaders(xhr, this.headers);
       setHeaders(xhr, headers);
 
-      xhr.send(data);
+      if (!data) {
+        xhr.send();
+      } else {
+        xhr.send(data);
+      }
 
       xhr.onload = () => {
         if (xhr.status === 200) {
