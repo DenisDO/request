@@ -30,15 +30,38 @@ class HttpRequest {
     const { transformResponse, headers, params, responseType = 'text' } = config;
     const requestURL = generateURL(this.baseUrl, url, params);
 
-    return new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.open(GET, requestURL);
-      xhr.responseType = responseType;
+    const xhr = new XMLHttpRequest();
+    xhr.open(GET, requestURL);
+    xhr.responseType = responseType;
 
-      setHeaders(xhr, this.headers);
-      setHeaders(xhr, headers);
+    setHeaders(xhr, this.headers);
+    setHeaders(xhr, headers);
+
+    return new Promise((resolve, reject) => {
+      xhr.onloadend = () => {
+        if (xhr.status === 200) {
+          resolve(transformResponse(xhr.responseText));
+        } else {
+          reject(xhr.status);
+        }
+      };
 
       xhr.send();
+    });
+  }
+
+  post(url, config) {
+    const { transformResponse, headers, data, responseType = 'text' } = config;
+    const requestURL = generateURL(this.baseUrl, url);
+
+    const xhr = new XMLHttpRequest();
+    xhr.open(POST, requestURL);
+    xhr.responseType = responseType;
+
+    setHeaders(xhr, this.headers);
+    setHeaders(xhr, headers);
+
+    return new Promise((resolve, reject) => {
       xhr.onload = () => {
         if (xhr.status === 200) {
           resolve(transformResponse(xhr.responseText));
@@ -46,34 +69,12 @@ class HttpRequest {
           reject(xhr.status);
         }
       };
-    });
-  }
-
-  post(url, config) {
-    const { transformResponse, headers, params, data, responseType = 'text' } = config;
-    const requestURL = generateURL(this.baseUrl, url, params);
-
-    return new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.open(POST, requestURL);
-      xhr.responseType = responseType;
-
-      setHeaders(xhr, this.headers);
-      setHeaders(xhr, headers);
 
       if (!data) {
         xhr.send();
       } else {
         xhr.send(data);
       }
-
-      xhr.onload = () => {
-        if (xhr.status === 200) {
-          resolve(transformResponse(xhr.responseText));
-        } else {
-          reject(xhr.status);
-        }
-      };
     });
   }
 }
