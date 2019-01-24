@@ -4,6 +4,22 @@
 
 const [GET, POST] = ['GET', 'POST'];
 
+function setHeaders(xhr, headers) {
+  for (const key in headers) {
+    xhr.setRequestHeader(key, headers[key]);
+  }
+}
+
+function generateURL(constructorURL, methodURL, parameters) {
+  const url = new URL(constructorURL + methodURL);
+
+  for (const key in parameters) {
+    url.searchParams.set(key, parameters[key]);
+  }
+
+  return url;
+}
+
 class HttpRequest {
   constructor({ baseUrl, headers }) {
     this.baseUrl = baseUrl;
@@ -12,29 +28,23 @@ class HttpRequest {
 
   get(url, config) {
     const { transformResponse, headers, params, responseType = 'text' } = config;
-    const requestURL = new URL(this.baseUrl + url);
+    const requestURL = generateURL(this.baseUrl, url, params);
 
-    for (const key in params) {
-      requestURL.searchParams.set(key, params[key]);
-    }
-
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.open(GET, requestURL);
       xhr.responseType = responseType;
 
-      for (const key in this.headers) {
-        xhr.setRequestHeader(key, this.headers[key]);
-      }
-
-      for (const key in headers) {
-        xhr.setRequestHeader(key, headers[key]);
-      }
+      setHeaders(xhr, this.headers);
+      setHeaders(xhr, headers);
 
       xhr.send();
-
       xhr.onload = () => {
-        resolve(transformResponse(xhr.responseText));
+        if (xhr.status === 200) {
+          resolve(transformResponse(xhr.responseText));
+        } else {
+          reject(xhr.status);
+        }
       };
     });
   }
