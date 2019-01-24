@@ -11,15 +11,24 @@
 //   });
 // };
 
+function transformResponse(text) {
+    console.log('transformResponse');
+    console.log(text + '\n_____________________________');
+    console.log('transformResponse');
+}
 
-// const reuest = new HttpRequest({
-//   baseUrl: 'http://localhost:8000',
-// });
+function transformRequest() {
+    console.log('transformRequest');
+}
 
-// reuest.get('/ping')
-//   .then(response => {
-//     console.log(response);
-//   })
-//   .catch(e => {
-//     console.log(e)
-//   });
+const reuest = new HttpRequest({
+  baseUrl: 'http://localhost:8000'
+});
+
+reuest.get('/form', { transformResponse })
+  .then(response => {
+    console.log(response);
+  })
+  .catch(e => {
+    console.log(e);
+  });
