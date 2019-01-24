@@ -1,14 +1,8 @@
 // responseType: const [arraybuffer, blob, document, json, text, stream]
 // responseType: 'json', // default
-// requestURL.toString(); // http://localhost:3000/user/12345?ID=12345&name=Den&surname=Derkach&age=21
+// requestURL.toString(); // http://localhost:8000/user/12345?ID=12345&name=Den&surname=Derkach&age=21
 
 const [GET, POST] = ['GET', 'POST'];
-
-// const setHeaders = function(xhr, headers) {
-//   for (const key in headers) {
-//     xhr.setRequestHeader(key, headers[key]);
-//   }
-// };
 
 class HttpRequest {
   constructor({ baseUrl, headers }) {
@@ -17,15 +11,16 @@ class HttpRequest {
   }
 
   get(url, config) {
-    const [transformResponse, headers, params, responseType = 'json'] = config;
+    const { transformResponse, headers, params, responseType = 'text' } = config;
     const requestURL = new URL(this.baseUrl + url);
 
     for (const key in params) {
       requestURL.searchParams.set(key, params[key]);
     }
-    return new Promise(() => {
+
+    return new Promise(resolve => {
       const xhr = new XMLHttpRequest();
-      xhr.open(GET, requestURL, false);
+      xhr.open(GET, requestURL);
       xhr.responseType = responseType;
 
       for (const key in this.headers) {
@@ -37,6 +32,10 @@ class HttpRequest {
       }
 
       xhr.send();
+
+      xhr.onload = () => {
+        resolve(transformResponse(xhr.responseText));
+      };
     });
   }
 
@@ -45,25 +44,24 @@ class HttpRequest {
   // }
 }
 
-// const reuest = new HttpRequest({
-//   baseUrl: 'http://localhost:3000',
-//   headers: {
-//     'Accept': 'text/plain',
-//     'Cache-Control': 'no-cache',
-//     'Transfer-Encoding': 'chunked'
-//   }
+// const request = new HttpRequest({
+//   baseUrl: 'http://localhost:8000'
 // });
 
-/*
-reuest.get('/user/12345', { onDownloadProgress, headers: {contentType: undefined} })
-.then(response => {
-  console.log(response);
-})
-.catch(e => {
-  console.log(e)
-});
+// function onDownloadProgress() {
+//   console.log('LOADING...');
+// }
 
-reuest.post('/save', { data: formdata, header, onUploadProgress })
+// request.get('/user/12345', { onDownloadProgress, headers: { contentType: undefined } })
+//   .then(response => {
+//     console.log(response);
+//   })
+//   .catch(e => {
+//     console.log(e)
+//   });
+
+/*
+request.post('/save', { data: formdata, header, onUploadProgress })
   .then(response => {
     console.log(response);
   })
