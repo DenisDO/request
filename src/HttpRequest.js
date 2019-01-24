@@ -4,6 +4,12 @@
 
 const [GET, POST] = ['GET', 'POST'];
 
+// const setHeaders = function(xhr, headers) {
+//   for (const key in headers) {
+//     xhr.setRequestHeader(key, headers[key]);
+//   }
+// };
+
 class HttpRequest {
   constructor({ baseUrl, headers }) {
     this.baseUrl = baseUrl;
@@ -21,6 +27,10 @@ class HttpRequest {
       const xhr = new XMLHttpRequest();
       xhr.open(GET, requestURL, false);
       xhr.responseType = responseType;
+
+      for (const key in this.headers) {
+        xhr.setRequestHeader(key, this.headers[key]);
+      }
 
       for (const key in headers) {
         xhr.setRequestHeader(key, headers[key]);
