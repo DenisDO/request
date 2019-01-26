@@ -39,9 +39,9 @@ document.getElementById('downloadForm').onsubmit = function(e) {
 
   // eslint-disable-next-line no-undef
   const xhr = new HttpRequest({ baseUrl: 'http://localhost:8000' });
-  xhr.get(`/files/${e.target[0].value}`, { responseType: 'arraybuffer', onDownloadProgress })
+  xhr.get(`/files/${e.target[0].value}`, { responseType: 'blob', onDownloadProgress })
     .then(data => {
-      const imageURL = window.URL.createObjectURL(new Blob([new Uint8Array(data)], { type: 'image/jpeg' }));
+      const imageURL = window.URL.createObjectURL(data, { type: 'image/jpeg' });
       document.getElementById('myImage').src = imageURL;
     });
 };
