@@ -3,6 +3,9 @@
     <link href="./style.css" rel="stylesheet" />
   </head>
   <body>
+    <div id="downloadProgress">
+      <div id="downloadProgress-bar"></div>
+    </div>
     <section class="forms__wrapper">
       <form id='uploadForm' 
         encType="multipart/form-data">
@@ -10,7 +13,7 @@
         <input type='submit' value='Upload!' />
       </form>
       <form id='downloadForm'>
-        <input type="text" name="sampleFile" />
+        <input type="text" name="sampleFile" value="wallpaper.jpg" />
         <input type='submit' value='Download!' />
       </form>
 
@@ -18,6 +21,9 @@
         <div id="uploadProgress-bar"></div>
       </div>
     </section>
+    <div class="image__wrapper">
+        <img id='myImage' src=''></img>
+    </div>
   </body>
 <script src="/HttpRequest.js" ></script>
 <script src="/progress.js" ></script>
