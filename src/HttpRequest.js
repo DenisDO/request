@@ -1,7 +1,3 @@
-// responseType: const [arraybuffer, blob, document, json, text, stream]
-// responseType: 'json', // default
-// requestURL.toString(); // http://localhost:8000/user/12345?ID=12345&name=Den&surname=Derkach&age=21
-
 const [GET, POST] = ['GET', 'POST'];
 
 function setHeaders(xhr, headers) {
@@ -27,35 +23,15 @@ class HttpRequest {
   }
 
   get(url, config) {
-    const { transformResponse, headers, params, responseType = 'text' } = config;
+    const { transformResponse, headers, params, responseType = 'text', onDownloadProgress } = config;
     const requestURL = generateURL(this.baseUrl, url, params);
-
     const xhr = new XMLHttpRequest();
+
     xhr.open(GET, requestURL);
-    xhr.responseType = responseType;
-
-    setHeaders(xhr, this.headers);
-    setHeaders(xhr, headers);
-
-    return new Promise((resolve, reject) => {
-      xhr.onloadend = () => {
-        if (xhr.status === 200) {
-          resolve(transformResponse(xhr.responseText));
-        } else {
-          reject(xhr.status);
-        }
-      };
-
-      xhr.send();
-    });
-  }
-
-  post(url, config) {
-    const { transformResponse, headers, data, responseType = 'text' } = config;
-    const requestURL = generateURL(this.baseUrl, url);
-
-    const xhr = new XMLHttpRequest();
-    xhr.open(POST, requestURL);
+    xhr.onprogress = function(event) {
+      // console.warn('DOWNLOADING');
+      // console.log(event.total);
+    };
     xhr.responseType = responseType;
 
     setHeaders(xhr, this.headers);
@@ -64,7 +40,32 @@ class HttpRequest {
     return new Promise((resolve, reject) => {
       xhr.onload = () => {
         if (xhr.status === 200) {
-          resolve(transformResponse(xhr.responseText));
+          resolve(xhr.response);
+        } else {
+          reject(xhr.status);
+        }
+      };
+      xhr.send();
+    });
+  }
+
+  post(url, config) {
+    const { transformResponse, headers, data, responseType = 'text', onUploadProgress } = config;
+    const requestURL = generateURL(this.baseUrl, url);
+    const xhr = new XMLHttpRequest();
+
+    xhr.open(POST, requestURL);
+    xhr.upload.onprogress = event => onUploadProgress(event, false);
+    xhr.upload.onloadend = event => onUploadProgress(event, true);
+    xhr.responseType = responseType;
+
+    setHeaders(xhr, this.headers);
+    setHeaders(xhr, headers);
+
+    return new Promise((resolve, reject) => {
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          resolve(xhr.response);
         } else {
           reject(xhr.status);
         }
