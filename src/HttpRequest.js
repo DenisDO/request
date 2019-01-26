@@ -28,10 +28,8 @@ class HttpRequest {
     const xhr = new XMLHttpRequest();
 
     xhr.open(GET, requestURL);
-    xhr.onprogress = function(event) {
-      // console.warn('DOWNLOADING');
-      // console.log(event.total);
-    };
+    xhr.onprogress = event => onDownloadProgress(event, false);
+    xhr.onloadend = event => onDownloadProgress(event, true);
     xhr.responseType = responseType;
 
     setHeaders(xhr, this.headers);
