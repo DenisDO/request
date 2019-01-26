@@ -1,8 +1,9 @@
 const express = require('express');
-const fileUpload = require('express-fileupload');;
+const fileUpload = require('express-fileupload');
 const app = express();
 
 app.use('/form', express.static(__dirname + '/index.html'));
+app.use('/style.css', express.static(__dirname + '/src/style.css'));
 app.use('/progress.js', express.static(__dirname + '/src/progress.js'));
 app.use('/HttpRequest.js', express.static(__dirname + '/src/HttpRequest.js'));
 app.use('/files', express.static(__dirname + '/uploads'));
