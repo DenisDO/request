@@ -1,4 +1,5 @@
 const [GET, POST] = ['GET', 'POST'];
+const ImageTypes = ['.jpeg', '.jpg', '.png', '.gif'];
 
 function setHeaders(xhr, headers) {
   for (const key in headers) {
@@ -16,6 +17,13 @@ function generateURL(constructorURL, methodURL, parameters) {
   return url;
 }
 
+// function isImageFormat(url) {
+//   const regExp = /\.[0-9a-z]{1,5}$/i;
+//   const type = url.match(regExp)[0];
+
+//   return ImageTypes.includes(type);
+// }
+
 class HttpRequest {
   constructor({ baseUrl, headers }) {
     this.baseUrl = baseUrl;
@@ -23,13 +31,15 @@ class HttpRequest {
   }
 
   get(url, config) {
-    const { transformResponse, headers, params, responseType = 'text', onDownloadProgress } = config;
+    const { headers, params, responseType = 'json', onDownloadProgress } = config;
     const requestURL = generateURL(this.baseUrl, url, params);
     const xhr = new XMLHttpRequest();
-
     xhr.open(GET, requestURL);
-    xhr.onprogress = event => onDownloadProgress(event, false);
-    xhr.onloadend = event => onDownloadProgress(event, true);
+
+    if (onDownloadProgress) {
+      xhr.onprogress = event => onDownloadProgress(event, false);
+      xhr.onloadend = event => onDownloadProgress(event, true);
+    }
     xhr.responseType = responseType;
 
     setHeaders(xhr, this.headers);
@@ -48,7 +58,7 @@ class HttpRequest {
   }
 
   post(url, config) {
-    const { transformResponse, headers, data, responseType = 'text', onUploadProgress } = config;
+    const { headers, data, responseType = 'json', onUploadProgress } = config;
     const requestURL = generateURL(this.baseUrl, url);
     const xhr = new XMLHttpRequest();
 
