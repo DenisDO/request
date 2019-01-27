@@ -7,22 +7,25 @@
       <div id="downloadProgress-bar"></div>
     </div>
     <section class="forms__wrapper">
-      <form id='uploadForm' 
+      <form id="uploadForm" 
         encType="multipart/form-data">
         <input type="file" name="sampleFile" />
-        <input type='submit' value='Upload!' />
+        <input type="submit" value="Upload!" />
       </form>
-      <form id='downloadForm'>
-        <input type="text" name="sampleFile" value="wallpaper.jpg" />
-        <input type='submit' value='Download!' />
+      <form id="downloadForm">
+        <input type="text" name="sampleFile" />
+        <input type="submit" value="Download!" />
       </form>
 
       <div id="uploadProgress">
         <div id="uploadProgress-bar"></div>
       </div>
     </section>
+    <section class="files__wrapper" id='filesCintainer'>
+      <button class="files__button" id="listButton">Show files list</button>
+    </section>
     <div class="image__wrapper">
-        <img id='myImage' src=''></img>
+        <img id="myImage" src=""></img>
     </div>
   </body>
 <script src="/HttpRequest.js" ></script>
