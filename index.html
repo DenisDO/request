@@ -16,7 +16,7 @@
           <input type="file" name="sampleFile" id="download" />
           <p class="download-bar">
             <i class="fas fa-cloud-upload-alt download-icon"></i>
-            <span class="download-content">Choice your file</span>
+            <span class="download-content">Choose your file</span>
           </p>
         </label>
         <input type="submit" disabled="true" value="Upload!" class="button button--disabled" id="upload__button" />
@@ -36,8 +36,13 @@
       </div>
     </section>
 
-    <section class="files__wrapper" id='filesCintainer'>
-      <!-- <button class="button button--disabled"  disabled="true" id="listButton">Show files list</button> -->
+    <section class="files__wrapper">
+      <header>
+        <h2 class="files__header">List of files:</h2>
+      </header>
+      <section  id='filesCintainer'>
+          <span class="files__info">no files</span>
+      </section>
     </section>
   </body>
 <script src="/HttpRequest.js" ></script>
