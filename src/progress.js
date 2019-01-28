@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const uploadBar = document.getElementById('uploadProgress-bar');
 const downloadBar = document.getElementById('downloadProgress-bar');
 const downloadButton = document.getElementById('downloadButton');
@@ -88,9 +89,11 @@ document.getElementById('uploadForm').onchange = function() {
   enableElement('upload__button', 'button button--enabled');
 };
 
-document.getElementById('downloadForm').onchange = function() {
+document.getElementById('downloadForm').onchange = function(e) {
   resetProgressBar(downloadBar, '#5e29b7');
   enableElement('downloadButton', 'button button--enabled');
+  const notifyDownload = new Notification(INFO, `You can download the file ${e.target.value}!`);
+  notifyDownload.showNotify();
 };
 
 document.getElementById('uploadForm').onsubmit = function(e) {
@@ -106,6 +109,10 @@ document.getElementById('uploadForm').onsubmit = function(e) {
     .then(() => {
       enableElement('downloadText');
       createRequestForList();
+      const notifyFilesList = new Notification(INFO, 'Files list is available!');
+      const notifyUploaded = new Notification(INFO, `File ${file.name} was uploaded!`);
+      notifyFilesList.showNotify();
+      notifyUploaded.showNotify();
     });
 };
 
@@ -120,12 +127,18 @@ document.getElementById('downloadForm').onsubmit = function(e) {
 
       if (isImageFormat(dataType)) {
         showImage(data, dataType);
+        const notifyImage = new Notification(INFO, 'Image is downloaded!');
+        notifyImage.showNotify();
       } else {
         downloadFile(data, dataType);
+        const notifyFile = new Notification(INFO, 'The file may be downloaded to Your device!');
+        notifyFile.showNotify();
       }
     });
 };
 
 document.getElementById('download').onchange = function(e) {
   document.querySelector('.download-content').innerHTML = e.target.value.replace(/.*\\/, '');
+  const notifyFile = new Notification(INFO, `The file ${e.target.value.replace(/.*\\/, '')} may be uploaded!`);
+  notifyFile.showNotify();
 };

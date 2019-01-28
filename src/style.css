@@ -180,3 +180,66 @@ form > input[type='text']:focus {
 input[type='file']{
     display: none;
 }
+
+/* Notification */
+
+.notifications__wrapper {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.notify {
+    font-family: 'Roboto';
+    width: 300px;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.notify__header {
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    font-size: 12px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 10px 10px 0 0;
+}
+
+.notify__header__icon {
+    font-size: 28px;
+}
+.notify__header__text {
+    font-weight: 500;
+    font-size: 18px;
+    padding: 5px;
+    margin: 0;
+    line-height: 1;
+    background-color: transparent;
+}
+
+.notify__body {
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 0 0 10px 10px;
+}
+
+.notify__body__text {
+    font-weight: 300;
+}
+
+.notify--info {
+    color: #2ecc71;
+}
+
+.notify--warning {
+    color: #f1c40f;
+}
+
+.notify--error {
+    color: #c0392b;
+}
