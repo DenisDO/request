@@ -1,11 +1,12 @@
 const uploadBar = document.getElementById('uploadProgress-bar');
 const downloadBar = document.getElementById('downloadProgress-bar');
+const downloadButton = document.getElementById('downloadButton');
 const isImageFormat = function(data) {
   return data.includes('image');
 };
 
 function showImage(data, imageType, fileName) {
-  const imageURL = window.URL.createObjectURL(data, { type: imageType });
+  const imageURL = URL.createObjectURL(data, { type: imageType });
   const image = document.getElementById('myImage');
   image.src = imageURL;
   image.alt = fileName;
@@ -15,18 +16,24 @@ function downloadFile(data, fileType) {
   const downloadElement = document.createElement('a');
   downloadElement.style.display = 'none';
   document.body.appendChild(downloadElement);
-  const downloadURL = window.URL.createObjectURL(data, { type: fileType });
+  const downloadURL = URL.createObjectURL(data, { type: fileType });
   downloadElement.href = downloadURL;
-  // element.download = filename;
-  downloadElement.target = '_blank';
+  downloadElement.download = fileType;
   downloadElement.click();
   document.body.removeChild(downloadElement);
 }
 
+function createRequestForList() {
+  // eslint-disable-next-line no-undef
+  const xhr = new HttpRequest({ baseUrl: 'http://localhost:8000' });
+  xhr.get('/list', { responseType: 'json' })
+    // eslint-disable-next-line no-use-before-define
+    .then(data => showFilesList(data));
+}
+
 function showFilesList(files) {
   const container = document.getElementById('filesCintainer');
-  const button = document.getElementById('listButton');
-  container.removeChild(button);
+  container.innerHTML = '';
   const list = document.createElement('ul');
   list.className = 'filesList__container';
 
@@ -35,7 +42,6 @@ function showFilesList(files) {
     item.innerHTML = `${files[key]}`;
     list.appendChild(item);
   }
-  container.style.textAlign = 'left';
   container.appendChild(list);
 }
 
@@ -52,6 +58,10 @@ function onUploadProgress(event, isFinished) {
 }
 
 function onDownloadProgress(event, isFinished) {
+  // if (downloadBar.style.width === '100%') {
+  //   downloadBar.style.width = '0%';
+  // }
+
   const percentage = Math.round(event.loaded / event.total * 100);
   downloadBar.style.width = `${percentage}%`;
 
@@ -60,16 +70,46 @@ function onDownloadProgress(event, isFinished) {
   }
 }
 
+function resetProgressBar(bar, backgroundColor) {
+  bar.style.width = '0%';
+  bar.innerHTML = '';
+  bar.style.backgroundColor = backgroundColor;
+  bar.style.backgroundImage = 'none';
+}
+
+function enableElement(elementID, style) {
+  const element = document.getElementById(elementID);
+  element.disabled = false;
+
+  if (style) {
+    element.className = style;
+  }
+}
+
+document.getElementById('uploadForm').onchange = function() {
+  resetProgressBar(uploadBar, '#5e29b7');
+  enableElement('upload__button', 'button button--enabled');
+};
+
+document.getElementById('downloadForm').onchange = function() {
+  resetProgressBar(downloadBar, '#5e29b7');
+  enableElement('downloadButton', 'button button--enabled');
+};
+
 document.getElementById('uploadForm').onsubmit = function(e) {
   e.preventDefault();
+  const file = e.target.sampleFile.files[0];
   const form = new FormData();
   const myHeaders = new Headers();
   myHeaders.append('Content-Type', 'multipart/form-data');
-  form.append('sampleFile', e.target.sampleFile.files[0]);
-
+  form.append('sampleFile', file);
   // eslint-disable-next-line no-undef
   const xhr = new HttpRequest({ baseUrl: 'http://localhost:8000' });
-  xhr.post('/upload', { responseType: 'blob', onUploadProgress, data: form });
+  xhr.post('/upload', { responseType: 'blob', onUploadProgress, data: form })
+    .then(() => {
+      enableElement('downloadText');
+      createRequestForList();
+    });
 };
 
 document.getElementById('downloadForm').onsubmit = function(e) {
@@ -89,9 +129,6 @@ document.getElementById('downloadForm').onsubmit = function(e) {
     });
 };
 
-document.getElementById('listButton').onclick = function(e) {
-  // eslint-disable-next-line no-undef
-  const xhr = new HttpRequest({ baseUrl: 'http://localhost:8000' });
-  xhr.get('/list', { responseType: 'json' })
-    .then(data => showFilesList(data));
+document.getElementById('download').onchange = function(e) {
+  document.querySelector('.download-content').innerHTML = e.target.value.replace(/.*\\/, '');
 };
