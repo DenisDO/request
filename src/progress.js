@@ -9,6 +9,7 @@ const isImageFormat = function(data) {
 function showImage(data, imageType, fileName) {
   const imageURL = URL.createObjectURL(data, { type: imageType });
   const image = document.getElementById('myImage');
+  image.style.display = 'inline-block';
   image.src = imageURL;
   image.alt = fileName;
 }
@@ -84,11 +85,6 @@ function enableElement(elementID, style) {
   }
 }
 
-document.getElementById('uploadForm').onchange = function() {
-  resetProgressBar(uploadBar, '#5e29b7');
-  enableElement('upload__button', 'button button--enabled');
-};
-
 document.getElementById('downloadForm').onchange = function(e) {
   resetProgressBar(downloadBar, '#5e29b7');
   enableElement('downloadButton', 'button button--enabled');
@@ -137,8 +133,18 @@ document.getElementById('downloadForm').onsubmit = function(e) {
     });
 };
 
-document.getElementById('download').onchange = function(e) {
-  document.querySelector('.download-content').innerHTML = e.target.value.replace(/.*\\/, '');
-  const notifyFile = new Notification(INFO, `The file ${e.target.value.replace(/.*\\/, '')} may be uploaded!`);
-  notifyFile.showNotify();
+document.getElementById('upload').onchange = function(e) {
+  const element = e.target.value.replace(/.*\\/, '');
+
+  if (element) {
+    resetProgressBar(uploadBar, '#5e29b7');
+    enableElement('upload__button', 'button button--enabled');
+    document.querySelector('.upload-content').innerHTML = element;
+    const notifyFile = new Notification(INFO, `The file ${element} may be uploaded!`);
+    notifyFile.showNotify();
+  } else {
+    // DISABLE BUTTON
+    const notifyFile = new Notification(ERROR, 'No file selected!');
+    notifyFile.showNotify();
+  }
 };
