@@ -34,6 +34,7 @@ function createRequestForList() {
 function showFilesList(files) {
   const container = document.getElementById('filesCintainer');
   container.innerHTML = '';
+  container.style.textAlign = 'left';
   const list = document.createElement('ul');
   list.className = 'filesList__container';
 
