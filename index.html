@@ -1,32 +1,44 @@
-<html>
+<html lang="en">
   <head>
+    <title>My App</title>
     <link href="./style.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
   </head>
   <body>
     <div id="downloadProgress">
       <div id="downloadProgress-bar"></div>
     </div>
+
     <section class="forms__wrapper">
       <form id="uploadForm" 
         encType="multipart/form-data">
-        <input type="file" name="sampleFile" />
-        <input type="submit" value="Upload!" />
+        <label class="download-field-wrap">
+          <input type="file" name="sampleFile" id="download" />
+          <p class="download-bar">
+            <i class="fas fa-cloud-upload-alt download-icon"></i>
+            <span class="download-content">Choice your file</span>
+          </p>
+        </label>
+        <input type="submit" disabled="true" value="Upload!" class="button button--disabled" id="upload__button" />
       </form>
+
       <form id="downloadForm">
-        <input type="text" name="sampleFile" />
-        <input type="submit" value="Download!" />
+        <input type="text" disabled="true" name="sampleFile" placeholder="Enter file name" id="downloadText" />
+        <input type="submit" disabled="true" value="Download!" class="button button--disabled" id="downloadButton" />
       </form>
 
       <div id="uploadProgress">
         <div id="uploadProgress-bar"></div>
       </div>
+
+      <div class="image__wrapper">
+          <img id="myImage" src=""></img>
+      </div>
     </section>
+
     <section class="files__wrapper" id='filesCintainer'>
-      <button class="files__button" id="listButton">Show files list</button>
+      <!-- <button class="button button--disabled"  disabled="true" id="listButton">Show files list</button> -->
     </section>
-    <div class="image__wrapper">
-        <img id="myImage" src=""></img>
-    </div>
   </body>
 <script src="/HttpRequest.js" ></script>
 <script src="/progress.js" ></script>
