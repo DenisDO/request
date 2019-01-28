@@ -17,13 +17,6 @@ function generateURL(constructorURL, methodURL, parameters) {
   return url;
 }
 
-// function isImageFormat(url) {
-//   const regExp = /\.[0-9a-z]{1,5}$/i;
-//   const type = url.match(regExp)[0];
-
-//   return ImageTypes.includes(type);
-// }
-
 class HttpRequest {
   constructor({ baseUrl, headers }) {
     this.baseUrl = baseUrl;
@@ -31,7 +24,7 @@ class HttpRequest {
   }
 
   get(url, config) {
-    const { headers, params, responseType = 'json', onDownloadProgress } = config;
+    const { headers, params, responseType = 'json', onDownloadProgress, transformResponse } = config;
     const requestURL = generateURL(this.baseUrl, url, params);
     const xhr = new XMLHttpRequest();
     xhr.open(GET, requestURL);
@@ -48,7 +41,11 @@ class HttpRequest {
     return new Promise((resolve, reject) => {
       xhr.onload = () => {
         if (xhr.status === 200) {
-          resolve(xhr.response);
+          if (transformResponse) {
+            resolve(transformResponse.reduce((acc, func) => func(acc), xhr.response));
+          } else {
+            resolve(xhr.response);
+          }
         } else {
           reject(xhr.status);
         }
@@ -58,14 +55,17 @@ class HttpRequest {
   }
 
   post(url, config) {
-    const { headers, data, responseType = 'json', onUploadProgress } = config;
+    const { headers, data, responseType = 'json', onUploadProgress, transformResponse } = config;
     const requestURL = generateURL(this.baseUrl, url);
     const xhr = new XMLHttpRequest();
 
     xhr.open(POST, requestURL);
-    xhr.upload.onprogress = event => onUploadProgress(event, false);
-    xhr.upload.onloadend = event => onUploadProgress(event, true);
     xhr.responseType = responseType;
+
+    if (onUploadProgress) {
+      xhr.upload.onprogress = event => onUploadProgress(event, false);
+      xhr.upload.onloadend = event => onUploadProgress(event, true);
+    }
 
     setHeaders(xhr, this.headers);
     setHeaders(xhr, headers);
@@ -73,7 +73,11 @@ class HttpRequest {
     return new Promise((resolve, reject) => {
       xhr.onload = () => {
         if (xhr.status === 200) {
-          resolve(xhr.response);
+          if (transformResponse) {
+            resolve(transformResponse.reduce((acc, func) => func(acc), xhr.response));
+          } else {
+            resolve(xhr.response);
+          }
         } else {
           reject(xhr.status);
         }
