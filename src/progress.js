@@ -59,10 +59,6 @@ function onUploadProgress(event, isFinished) {
 }
 
 function onDownloadProgress(event, isFinished) {
-  // if (downloadBar.style.width === '100%') {
-  //   downloadBar.style.width = '0%';
-  // }
-
   const percentage = Math.round(event.loaded / event.total * 100);
   downloadBar.style.width = `${percentage}%`;
 
