@@ -8,8 +8,8 @@ app.use('/style.css', express.static(__dirname + '/src/style.css'));
 app.use('/progress.js', express.static(__dirname + '/src/progress.js'));
 app.use('/notification.js', express.static(__dirname + '/src/notification.js'));
 app.use('/HttpRequest.js', express.static(__dirname + '/src/HttpRequest.js'));
+app.use('/auxiliary.js', express.static(__dirname + '/src/auxiliary.js'));
 app.use('/files', express.static(__dirname + '/uploads'));
-
 // FS
 const fs = require('fs');
 app.use('/list', express.static(__dirname + '/uploads'));
