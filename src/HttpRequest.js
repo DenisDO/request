@@ -1,5 +1,4 @@
 const [GET, POST] = ['GET', 'POST'];
-const ImageTypes = ['.jpeg', '.jpg', '.png', '.gif'];
 
 function setHeaders(xhr, headers) {
   for (const key in headers) {

@@ -1,4 +1,3 @@
-/* eslint-disable */
 const [INFO, ERROR, WARNING] = ['INFO', 'ERROR', 'WARNING'];
 
 const createWrapper = function() {
@@ -21,11 +20,9 @@ class Notification {
 
   showNotify() {
     const notify = document.createElement('div');
-
     const header = document.createElement('div');
     const headerIcon = document.createElement('i');
     const headerText = document.createElement('h3');
-
     const body = document.createElement('div');
     const bodyText = document.createElement('span');
 
@@ -47,6 +44,7 @@ class Notification {
       header.className = 'notify__header notify--error';
       headerIcon.className = 'notify__header__icon fas fa-exclamation-circle';
       break;
+    default: break;
     }
     headerText.innerHTML = this.type;
     bodyText.innerHTML = this.text;
@@ -65,7 +63,3 @@ class Notification {
     parent.removeChild(notify);
   }
 }
-
-const firstNotify = new Notification(INFO, `It was made with info!`);
-const secondNotify = new Notification(WARNING, 'It was made with warning!');
-const thirdNotify = new Notification(ERROR, 'It was made with error!');

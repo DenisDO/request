@@ -1,13 +1,13 @@
+/* eslint-disable no-useless-escape */
 /* eslint-disable no-undef */
 const uploadBar = document.getElementById('uploadProgress-bar');
 const downloadBar = document.getElementById('downloadProgress-bar');
-const downloadButton = document.getElementById('downloadButton');
-const isImageFormat = function(data) {
+
+function isImageFormat(data) {
   return data.includes('image');
-};
+}
 
 function isValidFile(fileName) {
-  // eslint-disable-next-line no-useless-escape
   const characters = /^[^\\/:\*\?"<>\|]+$/;
   const dot = /^\./;
 
@@ -17,6 +17,15 @@ function isValidFile(fileName) {
 function enableElement(elementID, style) {
   const element = document.getElementById(elementID);
   element.disabled = false;
+
+  if (style) {
+    element.className = style;
+  }
+}
+
+function disableElement(elementID, style) {
+  const element = document.getElementById(elementID);
+  element.disabled = true;
 
   if (style) {
     element.className = style;
@@ -40,18 +49,6 @@ function downloadFile(data, fileType) {
   downloadElement.download = fileType;
   downloadElement.click();
   document.body.removeChild(downloadElement);
-}
-
-function createRequestForList() {
-  // eslint-disable-next-line no-undef
-  const xhr = new HttpRequest({ baseUrl: 'http://localhost:8000' });
-  xhr.get('/list', { responseType: 'json' })
-    // eslint-disable-next-line no-use-before-define
-    .then(data => showFilesList(data))
-    .catch(xhr => {
-      const notifyReject = new Notification(ERROR, `Error: ${xhr.statusText}`);
-      notifyReject.showNotify();
-    });
 }
 
 function resetProgressBar(bar, backgroundColor) {
@@ -106,8 +103,7 @@ function onDownloadProgress(event, isFinished) {
   const percentage = Math.round(event.loaded / event.total * 100);
   downloadBar.style.display = 'block';
   downloadBar.style.width = `${percentage}%`;
-  const title = document.querySelector('title');
-  title.innerHTML = `My App - ${percentage}%`;
+  document.querySelector('title').innerHTML = `My App - ${percentage}%`;
 
   if (isFinished) {
     title.innerHTML = 'My App';
@@ -116,13 +112,14 @@ function onDownloadProgress(event, isFinished) {
   }
 }
 
-function disableElement(elementID, style) {
-  const element = document.getElementById(elementID);
-  element.disabled = true;
-
-  if (style) {
-    element.className = style;
-  }
+function createRequestForList() {
+  const xhr = new HttpRequest({ baseUrl: 'http://localhost:8000' });
+  xhr.get('/list', { responseType: 'json' })
+    .then(data => showFilesList(data))
+    .catch(xhr => {
+      const notifyReject = new Notification(ERROR, `Error: ${xhr.statusText}`);
+      notifyReject.showNotify();
+    });
 }
 
 document.getElementById('uploadForm').onsubmit = function(e) {
