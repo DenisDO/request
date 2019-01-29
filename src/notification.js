@@ -58,7 +58,7 @@ class Notification {
     notify.appendChild(body);
     this.parent.appendChild(notify);
 
-    setTimeout(this.removeNotify, 5000, this.parent, notify);
+    setTimeout(this.removeNotify, 10000, this.parent, notify);
   }
 
   removeNotify(parent, notify) {
