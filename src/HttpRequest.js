@@ -1,4 +1,5 @@
 /* eslint-disable no-undef */
+
 class HttpRequest {
   constructor({ baseUrl, headers }) {
     this.baseUrl = baseUrl;
@@ -11,27 +12,11 @@ class HttpRequest {
     const xhr = new XMLHttpRequest();
     xhr.open(GET, requestURL);
 
-    if (onDownloadProgress) {
-      xhr.onprogress = event => onDownloadProgress(event, false);
-      xhr.onloadend = event => onDownloadProgress(event, true);
-    }
-    xhr.responseType = responseType;
-
+    setProgressFunction(xhr, onDownloadProgress);
     setHeaders(xhr, { ...this.headers, ...headers });
 
     return new Promise((resolve, reject) => {
-      xhr.onload = () => {
-        if (xhr.status === 200) {
-          if (transformResponse) {
-            resolve(transformResponse.reduce((acc, func) => func(acc), xhr.response));
-          } else {
-            resolve(xhr.response);
-          }
-        } else {
-          reject(xhr);
-        }
-      };
-      xhr.send();
+      createRequest({ xhr, transformResponse, undefined, resolve, reject, responseType });
     });
   }
 
@@ -39,35 +24,13 @@ class HttpRequest {
     const { headers, data, responseType = 'json', onUploadProgress, transformResponse } = config;
     const requestURL = generateURL(this.baseUrl, url);
     const xhr = new XMLHttpRequest();
-
     xhr.open(POST, requestURL);
-    xhr.responseType = responseType;
 
-    if (onUploadProgress) {
-      xhr.upload.onprogress = event => onUploadProgress(event, false);
-      xhr.upload.onloadend = event => onUploadProgress(event, true);
-    }
-
+    setProgressFunction(xhr, onUploadProgress);
     setHeaders(xhr, { ...this.headers, ...headers });
 
     return new Promise((resolve, reject) => {
-      xhr.onload = () => {
-        if (xhr.status === 200) {
-          if (transformResponse) {
-            resolve(transformResponse.reduce((acc, func) => func(acc), xhr.response));
-          } else {
-            resolve(xhr.response);
-          }
-        } else {
-          reject(xhr);
-        }
-      };
-
-      if (!data) {
-        xhr.send();
-      } else {
-        xhr.send(data);
-      }
+      createRequest({ xhr, transformResponse, data, resolve, reject, responseType });
     });
   }
 }

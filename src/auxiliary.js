@@ -18,3 +18,38 @@ function generateURL(constructorURL, methodURL, parameters) {
 
   return url;
 }
+
+function createRequest(elements) {
+  const {
+    xhr,
+    transformResponse,
+    data,
+    resolve,
+    reject,
+    responseType
+  } = elements;
+  xhr.responseType = responseType;
+  xhr.onload = () => {
+    if (xhr.status === 200) {
+      const response = transformResponse
+        ? transformResponse.reduce((acc, f) => f(acc), xhr.response)
+        : xhr.response;
+      resolve(response);
+    } else {
+      reject(xhr);
+    }
+  };
+
+  if (!data) {
+    xhr.send();
+  } else {
+    xhr.send(data);
+  }
+}
+
+function setProgressFunction(xhr, progress) {
+  if (progress) {
+    xhr.onprogress = event => progress(event, false);
+    xhr.onloadend = event => progress(event, true);
+  }
+}
