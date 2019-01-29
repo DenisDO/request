@@ -46,10 +46,3 @@ function createRequest(elements) {
     xhr.send(data);
   }
 }
-
-function setProgressFunction(xhr, progress) {
-  if (progress) {
-    xhr.onprogress = event => progress(event, false);
-    xhr.onloadend = event => progress(event, true);
-  }
-}

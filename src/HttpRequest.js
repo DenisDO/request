@@ -12,7 +12,10 @@ class HttpRequest {
     const xhr = new XMLHttpRequest();
     xhr.open(GET, requestURL);
 
-    setProgressFunction(xhr, onDownloadProgress);
+    if (onDownloadProgress) {
+      xhr.onprogress = event => onDownloadProgress(event, false);
+      xhr.onloadend = event => onDownloadProgress(event, true);
+    }
     setHeaders(xhr, { ...this.headers, ...headers });
 
     return new Promise((resolve, reject) => {
@@ -26,7 +29,11 @@ class HttpRequest {
     const xhr = new XMLHttpRequest();
     xhr.open(POST, requestURL);
 
-    setProgressFunction(xhr, onUploadProgress);
+
+    if (onUploadProgress) {
+      xhr.upload.onprogress = event => onUploadProgress(event, false);
+      xhr.upload.onloadend = event => onUploadProgress(event, true);
+    }
     setHeaders(xhr, { ...this.headers, ...headers });
 
     return new Promise((resolve, reject) => {

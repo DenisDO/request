@@ -101,9 +101,10 @@ function onUploadProgress(event, isFinished) {
 
 function onDownloadProgress(event, isFinished) {
   const percentage = Math.round(event.loaded / event.total * 100);
+  const title = document.querySelector('title');
   downloadBar.style.display = 'block';
   downloadBar.style.width = `${percentage}%`;
-  document.querySelector('title').innerHTML = `My App - ${percentage}%`;
+  title.innerHTML = `My App - ${percentage}%`;
 
   if (isFinished) {
     title.innerHTML = 'My App';
