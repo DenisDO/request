@@ -3,7 +3,10 @@ const ImageTypes = ['.jpeg', '.jpg', '.png', '.gif'];
 
 function setHeaders(xhr, headers) {
   for (const key in headers) {
-    xhr.setRequestHeader(key, headers[key]);
+    // eslint-disable-next-line no-prototype-builtins
+    if (headers.hasOwnProperty(key)) {
+      xhr.setRequestHeader(key, headers[key]);
+    }
   }
 }
 
@@ -35,8 +38,7 @@ class HttpRequest {
     }
     xhr.responseType = responseType;
 
-    setHeaders(xhr, this.headers);
-    setHeaders(xhr, headers);
+    setHeaders(xhr, { ...this.headers, ...headers });
 
     return new Promise((resolve, reject) => {
       xhr.onload = () => {
@@ -47,7 +49,7 @@ class HttpRequest {
             resolve(xhr.response);
           }
         } else {
-          reject(xhr.status);
+          reject(xhr);
         }
       };
       xhr.send();
@@ -67,8 +69,7 @@ class HttpRequest {
       xhr.upload.onloadend = event => onUploadProgress(event, true);
     }
 
-    setHeaders(xhr, this.headers);
-    setHeaders(xhr, headers);
+    setHeaders(xhr, { ...this.headers, ...headers });
 
     return new Promise((resolve, reject) => {
       xhr.onload = () => {
@@ -79,7 +80,7 @@ class HttpRequest {
             resolve(xhr.response);
           }
         } else {
-          reject(xhr.status);
+          reject(xhr);
         }
       };
 
