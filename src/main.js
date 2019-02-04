@@ -15,21 +15,58 @@ filesList.addListener(chooseFileFromList);
 const notify = new Notification(notifyWrapper);
 const xhr = new HttpRequest({ baseUrl: 'http://localhost:8000' });
 
+function enableElement(elements) {
+  elements.forEach(element => {
+    if (element.className.includes('disabled')) {
+      element.className = element.className.replace('disabled', 'enabled');
+    }
+    element.disabled = false;
+  });
+}
+
+function disableElement(elements) {
+  elements.forEach(element => {
+    if (element.className.includes('enabled')) {
+      element.className = element.className.replace('enabled', 'disabled');
+    }
+    element.disabled = true;
+  });
+}
+
+function showImage(data, imageType, fileName) {
+  const imageURL = URL.createObjectURL(data, { type: imageType });
+  const [image] = document.getElementsByClassName('image');
+  image.style.display = 'inline-block';
+  image.src = imageURL;
+  image.alt = fileName;
+}
+
+function downloadFile(data, fileType) {
+  const downloadElement = document.createElement('a');
+  downloadElement.style.display = 'none';
+  document.body.appendChild(downloadElement);
+  const downloadURL = URL.createObjectURL(data, { type: fileType });
+  downloadElement.href = downloadURL;
+  downloadElement.download = fileType;
+  downloadElement.click();
+  document.body.removeChild(downloadElement);
+}
+
 function chooseFileFromList(event) {
   const element = event.target;
 
   if (element.tagName === 'LI') {
     downloadInput.value = element.innerHTML;
-    utils.enableElement([downloadButton]);
+    enableElement([downloadButton]);
   }
 }
 
 function onInputFileNameChange({ target }) {
   if (target.value) {
-    utils.enableElement([downloadButton]);
+    enableElement([downloadButton]);
     notify.info(`You can download the file ${target.value}!`);
   } else {
-    utils.disableElement([downloadButton]);
+    disableElement([downloadButton]);
     notify.warning('There is not file for download!');
   }
 }
@@ -38,11 +75,11 @@ function onFileSelect(e) {
   const fileName = e.target.value.replace(/.*\\/, '');
 
   if (fileName) {
-    utils.enableElement([uploadButton]);
+    enableElement([uploadButton]);
     uploadContent.innerHTML = fileName;
     notify.info(`The file ${fileName} is ready for upload!`);
   } else {
-    utils.disableElement([uploadButton]);
+    disableElement([uploadButton]);
     uploadContent.innerHTML = 'Choose your file';
     notify.error('No file selected!');
   }
@@ -61,15 +98,15 @@ function onFileUploadSubmit(e) {
   const data = new FormData();
   data.append('sampleFile', file);
 
-  utils.disableElement([uploadFormContent, uploadFileSelector, uploadButton, downloadButton, downloadInput]);
+  disableElement([uploadFormContent, uploadFileSelector, uploadButton, downloadButton, downloadInput]);
   xhr.post('/upload', { responseType: 'blob', onUploadProgress, data })
     .then(() => {
-      utils.enableElement([uploadFormContent, uploadFileSelector, downloadInput]);
+      enableElement([uploadFormContent, uploadFileSelector, downloadInput]);
       filesList.load().then(filesList.render());
       notify.info(`File ${file.name} was uploaded!`);
     })
     .catch(xhr => {
-      utils.enableElement([uploadFormContent, uploadFileSelector]);
+      enableElement([uploadFormContent, uploadFileSelector]);
       notify.error(`Error: ${xhr.statusText}`);
     });
   uploadContent.innerHTML = 'Choose your file';
@@ -86,23 +123,23 @@ function onFileDownloadSubmit(e) {
     return;
   }
 
-  utils.disableElement([downloadButton, downloadInput, uploadFormContent, uploadFileSelector]);
+  disableElement([downloadButton, downloadInput, uploadFormContent, uploadFileSelector]);
   xhr.get(`/files/${file}`, { responseType: 'blob', onDownloadProgress })
     .then(data => {
       const dataType = data.type;
 
       if (utils.isImageFormat(dataType)) {
-        utils.showImage(data, dataType);
+        showImage(data, dataType);
         notify.info('Image is downloaded!');
       } else {
-        utils.downloadFile(data, dataType);
+        downloadFile(data, dataType);
         notify.info('The file may be downloaded to Your device!');
       }
 
-      utils.enableElement([downloadInput, uploadFormContent, uploadFileSelector]);
+      enableElement([downloadInput, uploadFormContent, uploadFileSelector]);
     })
     .catch(xhr => {
-      utils.enableElement([downloadInput, uploadFormContent, uploadFileSelector]);
+      enableElement([downloadInput, uploadFormContent, uploadFileSelector]);
       notify.error(`Error: ${xhr.statusText}`);
     });
 }
