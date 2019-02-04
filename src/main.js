@@ -9,27 +9,22 @@ const [filesWrapper] = document.getElementsByClassName('files__wrapper');
 const [notifyWrapper] = document.getElementsByClassName('notifications__wrapper');
 const [downloadButton] = document.getElementsByClassName('downloadForm__button');
 const [uploadButton] = document.getElementsByClassName('uploadButton');
+const [enabledState, disabledState] = ['enabled', 'disabled'];
 
 const filesList = new FilesList(filesWrapper);
 filesList.addListener(chooseFileFromList);
 const notify = new Notification(notifyWrapper);
 const xhr = new HttpRequest({ baseUrl: 'http://localhost:8000' });
 
-function enableElement(elements) {
-  elements.forEach(element => {
-    if (element.className.includes('disabled')) {
-      element.className = element.className.replace('disabled', 'enabled');
-    }
-    element.disabled = false;
-  });
-}
+function changeElementsState(elements, state) {
+  const oldClassName = state ? disabledState : enabledState;
+  const newClassName = state ? enabledState : disabledState;
 
-function disableElement(elements) {
   elements.forEach(element => {
-    if (element.className.includes('enabled')) {
-      element.className = element.className.replace('enabled', 'disabled');
+    if (element.className.includes(oldClassName)) {
+      element.className = element.className.replace(oldClassName, newClassName);
     }
-    element.disabled = true;
+    element.disabled = !state;
   });
 }
 
@@ -57,16 +52,16 @@ function chooseFileFromList(event) {
 
   if (element.tagName === 'LI') {
     downloadInput.value = element.innerHTML;
-    enableElement([downloadButton]);
+    changeElementsState([downloadButton], true);
   }
 }
 
 function onInputFileNameChange({ target }) {
   if (target.value) {
-    enableElement([downloadButton]);
+    changeElementsState([downloadButton], true);
     notify.info(`You can download the file ${target.value}!`);
   } else {
-    disableElement([downloadButton]);
+    changeElementsState([downloadButton], false);
     notify.warning('There is not file for download!');
   }
 }
@@ -75,11 +70,11 @@ function onFileSelect(e) {
   const fileName = e.target.value.replace(/.*\\/, '');
 
   if (fileName) {
-    enableElement([uploadButton]);
+    changeElementsState([uploadButton], true);
     uploadContent.innerHTML = fileName;
     notify.info(`The file ${fileName} is ready for upload!`);
   } else {
-    disableElement([uploadButton]);
+    changeElementsState([uploadButton], false);
     uploadContent.innerHTML = 'Choose your file';
     notify.error('No file selected!');
   }
@@ -98,15 +93,15 @@ function onFileUploadSubmit(e) {
   const data = new FormData();
   data.append('sampleFile', file);
 
-  disableElement([uploadFormContent, uploadFileSelector, uploadButton, downloadButton, downloadInput]);
+  changeElementsState([uploadFormContent, uploadFileSelector, uploadButton, downloadButton, downloadInput], false);
   xhr.post('/upload', { responseType: 'blob', onUploadProgress, data })
     .then(() => {
-      enableElement([uploadFormContent, uploadFileSelector, downloadInput]);
+      changeElementsState([uploadFormContent, uploadFileSelector, downloadInput], true);
       filesList.load().then(filesList.render());
       notify.info(`File ${file.name} was uploaded!`);
     })
     .catch(xhr => {
-      enableElement([uploadFormContent, uploadFileSelector]);
+      changeElementsState([uploadFormContent, uploadFileSelector], true);
       notify.error(`Error: ${xhr.statusText}`);
     });
   uploadContent.innerHTML = 'Choose your file';
@@ -123,7 +118,7 @@ function onFileDownloadSubmit(e) {
     return;
   }
 
-  disableElement([downloadButton, downloadInput, uploadFormContent, uploadFileSelector]);
+  changeElementsState([downloadButton, downloadInput, uploadFormContent, uploadFileSelector], false);
   xhr.get(`/files/${file}`, { responseType: 'blob', onDownloadProgress })
     .then(data => {
       const dataType = data.type;
@@ -136,10 +131,10 @@ function onFileDownloadSubmit(e) {
         notify.info('The file may be downloaded to Your device!');
       }
 
-      enableElement([downloadInput, uploadFormContent, uploadFileSelector]);
+      changeElementsState([downloadInput, uploadFormContent, uploadFileSelector], true);
     })
     .catch(xhr => {
-      enableElement([downloadInput, uploadFormContent, uploadFileSelector]);
+      changeElementsState([downloadInput, uploadFormContent, uploadFileSelector], true);
       notify.error(`Error: ${xhr.statusText}`);
     });
 }
