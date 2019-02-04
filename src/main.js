@@ -97,7 +97,7 @@ function onFileUploadSubmit(e) {
   xhr.post('/upload', { responseType: 'blob', onUploadProgress, data })
     .then(() => {
       changeElementsState([uploadFormContent, uploadFileSelector, downloadInput], true);
-      filesList.load().then(filesList.render());
+      filesList.init();
       notify.info(`File ${file.name} was uploaded!`);
     })
     .catch(xhr => {
