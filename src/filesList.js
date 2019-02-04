@@ -24,11 +24,14 @@
       }
       this.parent = nodeElement;
       this.data = [];
-      this.__init();
+      this.init();
     }
 
-    __init() {
-      this.load().then(() => this.render());
+    init() {
+      this.load().then(() => {
+        this.render();
+        notify.info('File list is updated!');
+      });
     }
 
     addListener(callback) {
