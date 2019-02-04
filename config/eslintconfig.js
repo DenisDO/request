@@ -29,7 +29,7 @@ module.exports = {
     'accessor-pairs': 'error',
     'array-callback-return': 'error',
     'class-methods-use-this': [1, {
-      'exceptMethods': ['render']
+      'exceptMethods': ['render', 'removeNotify']
     }],
     'consistent-return': 0,
     'curly': 'error',
@@ -71,13 +71,13 @@ module.exports = {
     'prefer-promise-reject-errors': 'error',
     'radix': 'error',
     'require-await': 'error',
-    'wrap-iife': 'error',
+    // 'wrap-iife': 'error',
     // variables
     'init-declarations': ['error', 'always'],
     // 'no-shadow': 'error',
     'no-shadow-restricted-names': 'error',
     'no-undef-init': 'error',
-    'no-use-before-define': 'error',
+    // 'no-use-before-define': 'error',
     // node.js and commonjs
     'global-require': 'error',
     'handle-callback-err': 'error',

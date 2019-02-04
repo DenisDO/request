@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
 body {
     background: linear-gradient(20deg, #5e29b7 0%,#d589b8 33%,#dbe1f7 100%);
     margin: 0;
@@ -12,6 +14,11 @@ body {
     overflow: hidden;
 }
 
+form {
+    padding: 0;
+    margin: 0;
+}
+
 .forms__wrapper, .files__wrapper {
     width: 370px;
     padding: 20px;
@@ -22,12 +29,7 @@ body {
     text-align: left;
 }
 
-form {
-    padding: 0;
-    margin: 0;
-}
-
-.button {
+.downloadForm__button, .uploadButton {
     font-family: Roboto;
     width: 100px;
     height: 35px;
@@ -39,22 +41,15 @@ form {
     outline: none;
 }
 
-.button--disabled {
-    cursor: default;
-}
-
-.button--enabled {
-    cursor: pointer;
-}
-
-.button--enabled:hover {
+.downloadForm__button.enabled:hover, .uploadButton.enabled:hover {
     box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.5);
     background-color: #5e29b7;
     color: white;
+    cursor: pointer;
 }
 
 
-form > input[type='text'] {
+.downloadForm__text {
     font-family: Roboto;
     height: 35px;
     border: none;
@@ -69,27 +64,27 @@ form > input[type='text'] {
     outline: none;
 }
 
-#downloadText:-webkit-autofill,
-#downloadText:-webkit-autofill:hover, 
-#downloadText:-webkit-autofill:focus, 
-#downloadText:-webkit-autofill:active  {
+.downloadForm__text:-webkit-autofill,
+.downloadForm__text:-webkit-autofill:hover, 
+.downloadForm__text:-webkit-autofill:focus, 
+.downloadForm__text:-webkit-autofill:active {
     -webkit-box-shadow: 0 0 0 30px #dda6ca inset !important;
 }
 
-form > input[type='text']:focus {
+.downloadForm__text:focus {
     border-bottom: 3px solid #5e29b7;
     color: #5e29b7;
     padding-bottom: 0px;
 }
 
-#uploadForm, #downloadForm {
+.uploadForm, .downloadForm {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
 }
 
-#uploadProgress {
+.uploadProgress {
     font-family: Roboto;
     background: #f0f0f0;
     box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.5);
@@ -101,7 +96,7 @@ form > input[type='text']:focus {
     overflow: hidden;
 }
     
-#uploadProgress-bar {
+.uploadProgress__bar {
     text-align: center;
     font-family: Roboto;
     color: white;
@@ -112,7 +107,7 @@ form > input[type='text']:focus {
     border-radius: 5px;
 }
 
-#downloadProgress {
+.downloadProgress {
     position: absolute;
     top: 0;
     height: 3px;
@@ -121,7 +116,7 @@ form > input[type='text']:focus {
     margin: 0 auto;
 }
 
-#downloadProgress-bar {
+.downloadProgress__bar {
     box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.5);
     border-radius: 2px;
     transition: 600ms;
@@ -130,7 +125,7 @@ form > input[type='text']:focus {
     height: 100%;
 }
 
-#myImage {
+.image {
     display: none;
     width: 100%;
     box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.5);
@@ -184,37 +179,40 @@ form > input[type='text']:focus {
     cursor: pointer;
 }
 
-.upload-bar{
+.uploadForm__content{
     font-family: Roboto;
     font-size: 16px;
     transition: 200ms;
     margin: 0;
-}
-
-.upload-bar--enabled {
-    cursor: pointer;
     text-shadow: 0 0 3px black;
     color: white;
 }
 
-.upload-bar--disabled {
-    cursor: default;
-    color: #a1a1a1;
+.uploadForm__content.enabled {
+    color: white;
+    cursor: pointer;
 }
 
-.upload-bar--enabled:hover {
+.uploadForm__content.enabled:hover {
     color: #5e29b7;
     text-shadow: 0 0 1px #575757;
 }
 
-.upload-field-wrap{
+.uploadForm__content.disabled {
+    cursor: default;
+    color: #a1a1a1;
+    text-shadow: none;
+}
+
+.uploadForm__file__wrapper{
     width: 162px;
     display: flex;
     justify-content: center;
     align-items: center;
+    font-family: Roboto;
 }
 
-input[type='file']{
+.uploadForm__file {
     display: none;
 }
 

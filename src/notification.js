@@ -1,62 +1,61 @@
 const [INFO, ERROR, WARNING] = ['INFO', 'ERROR', 'WARNING'];
-
-const createWrapper = function() {
-  const wrapper = document.createElement('div');
-  wrapper.className = 'notifications__wrapper';
-  wrapper.id = 'notifyWrapper';
-  document.querySelector('body').appendChild(wrapper);
+const notifyDataType = {
+  [INFO]: {
+    name: INFO,
+    className: 'info',
+    icon: 'info-circle'
+  },
+  [WARNING]: {
+    name: WARNING,
+    className: 'warning',
+    icon: 'exclamation-triangle'
+  },
+  [ERROR]: {
+    name: ERROR,
+    className: 'error',
+    icon: 'exclamation-circle'
+  }
 };
 
-class Notification {
-  constructor(type, text) {
-    this.type = type;
-    this.text = text;
+function renderNotify(type, text) {
+  return `
+  <div class="notify notify--${notifyDataType[type].className}">
+    <div class="notify__header">
+      <i class="notify__header__icon fas fa-${notifyDataType[type].icon}"></i>
+      <h3 class="notify__header__text">${notifyDataType[type].name}</h3>
+    </div>
+    <div class="notify__body">
+      <span class="notify__body__text">${text}</span>
+    </div>
+  </div>
+  `;
+}
 
-    if (!document.getElementById('notifyWrapper')) {
-      createWrapper();
+class Notification {
+  constructor(nodeElement) {
+    if (!nodeElement) {
+      throw new Error('Missing argument');
     }
-    this.parent = document.getElementById('notifyWrapper');
+    this.parent = nodeElement;
   }
 
-  showNotify() {
+  __render(type, text, time = 5000) {
     const notify = document.createElement('div');
-    const header = document.createElement('div');
-    const headerIcon = document.createElement('i');
-    const headerText = document.createElement('h3');
-    const body = document.createElement('div');
-    const bodyText = document.createElement('span');
-
-    notify.className = 'notify';
-    headerText.className = 'notify__header__text';
-    body.className = 'notify__body';
-    bodyText.className = 'notify__body__text';
-
-    switch (this.type) {
-    case INFO:
-      header.className = 'notify__header notify--info';
-      headerIcon.className = 'notify__header__icon fas fa-info-circle';
-      break;
-    case WARNING:
-      header.className = 'notify__header notify--warning';
-      headerIcon.className = 'notify__header__icon fas fa-exclamation-triangle';
-      break;
-    case ERROR:
-      header.className = 'notify__header notify--error';
-      headerIcon.className = 'notify__header__icon fas fa-exclamation-circle';
-      break;
-    default: break;
-    }
-    headerText.innerHTML = this.type;
-    bodyText.innerHTML = this.text;
-
-    header.appendChild(headerIcon);
-    header.appendChild(headerText);
-    body.appendChild(bodyText);
-    notify.appendChild(header);
-    notify.appendChild(body);
+    notify.innerHTML = renderNotify(type, text);
     this.parent.appendChild(notify);
+    setTimeout(this.removeNotify, time, this.parent, notify);
+  }
 
-    setTimeout(this.removeNotify, 10000, this.parent, notify);
+  info(text, time) {
+    this.__render(INFO, text, time);
+  }
+
+  warning(text, time) {
+    this.__render(WARNING, text, time);
+  }
+
+  error(text, time) {
+    this.__render(ERROR, text, time);
   }
 
   removeNotify(parent, notify) {

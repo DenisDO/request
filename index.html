@@ -1,38 +1,39 @@
 <html lang="en">
   <head>
     <title>My App</title>
+    <link rel="shortcut icon" href="#" />
     <link href="./style.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
   </head>
   <body>
-    <div id="downloadProgress">
-      <div id="downloadProgress-bar"></div>
+    <div class="downloadProgress">
+      <div class="downloadProgress__bar"></div>
     </div>
 
     <section class="forms__wrapper">
-      <form id="uploadForm" 
+      <form class="uploadForm"
         encType="multipart/form-data">
-        <label class="upload-field-wrap">
-          <input type="file" name="sampleFile" id="upload" />
-          <p id="upload__form__input" class="upload-bar upload-bar--enabled">
+        <label class="uploadForm__file__wrapper">
+          <input type="file" name="sampleFile" class="uploadForm__file enabled" />
+          <p class="uploadForm__content enabled">
             <i class="fas fa-cloud-upload-alt upload-icon"></i>
-            <span class="upload-content">Choose your file</span>
+            <span class="uploadForm__content__text">Choose your file</span>
           </p>
         </label>
-        <input type="submit" disabled="true" value="Upload!" class="button button--disabled" id="upload__button" />
+        <input type="submit" disabled="true" value="Upload!" class="uploadButton disabled" />
       </form>
 
-      <form id="downloadForm">
-        <input type="text" disabled="true" name="sampleFile" placeholder="Enter file name" id="downloadText" />
-        <input type="submit" disabled="true" value="Download!" class="button button--disabled" id="downloadButton" />
+      <form class="downloadForm">
+        <input type="text" name="sampleFile" placeholder="Enter file name" class="downloadForm__text enabled" />
+        <input type="submit" disabled="true" value="Download!" class="downloadForm__button disabled" />
       </form>
 
-      <div id="uploadProgress">
-        <div id="uploadProgress-bar"></div>
+      <div class="uploadProgress">
+        <div class="uploadProgress__bar"></div>
       </div>
 
       <div class="image__wrapper">
-          <img id="myImage" src=""></img>
+          <img class="image" src=""></img>
       </div>
     </section>
 
@@ -40,13 +41,17 @@
       <header>
         <h2 class="files__header">List of files:</h2>
       </header>
-      <section  id='filesCintainer'>
+      <section  class='files__content'>
           <span class="files__info">no files</span>
       </section>
     </section>
+    
+    <section class="notifications__wrapper"></section>
   </body>
-<script src="/auxiliary.js" ></script>
-<script src="/HttpRequest.js" ></script>
-<script src="/notification.js" ></script>
-<script src="/progress.js" ></script>
+  <script src="/notification.js" ></script>
+  <script src="/utils.js" ></script>
+  <script src="/HttpRequest.js" ></script>
+  <script src="/filesList.js" ></script>
+  <script src="/progress.js" ></script>
+  <script src="/main.js" ></script>
 </html>
