@@ -18,24 +18,34 @@
   }
 
   class FilesList {
-    constructor(nodeElement) {
+    constructor(nodeElement, itemsCallback) {
       if (!nodeElement) {
         throw new Error('Missing argument');
       }
       this.parent = nodeElement;
+      this.itemsCallback = itemsCallback;
       this.data = [];
       this.init();
     }
 
     init() {
-      this.load().then(() => {
-        this.render();
-        notify.info('File list is updated!');
-      });
+      this.load()
+        .then(() => {
+          this.render();
+          notify.info('File list is updated!');
+        })
+        .then(() => {
+          this.addListenerToItems(this.callback);
+        });
     }
 
-    addListener(callback) {
-      this.parent.addEventListener('click', callback);
+    addListenerToItems() {
+      const [filesContainer] = document.getElementsByClassName('filesList__container');
+      const { children } = filesContainer;
+
+      for (const key of children) {
+        key.addEventListener('click', this.itemsCallback);
+      }
     }
 
     load() {

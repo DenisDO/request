@@ -11,8 +11,7 @@ const [downloadButton] = document.getElementsByClassName('downloadForm__button')
 const [uploadButton] = document.getElementsByClassName('uploadButton');
 const [enabledState, disabledState] = ['enabled', 'disabled'];
 
-const filesList = new FilesList(filesWrapper);
-filesList.addListener(chooseFileFromList);
+const filesList = new FilesList(filesWrapper, chooseFileFromList);
 const notify = new Notification(notifyWrapper);
 const xhr = new HttpRequest({ baseUrl: 'http://localhost:8000' });
 
@@ -47,13 +46,9 @@ function downloadFile(data, fileType) {
   document.body.removeChild(downloadElement);
 }
 
-function chooseFileFromList(event) {
-  const element = event.target;
-
-  if (element.tagName === 'LI') {
-    downloadInput.value = element.innerHTML;
-    changeElementsState([downloadButton], true);
-  }
+function chooseFileFromList({ target }) {
+  downloadInput.value = target.innerHTML;
+  changeElementsState([downloadButton], true);
 }
 
 function onInputFileNameChange({ target }) {
